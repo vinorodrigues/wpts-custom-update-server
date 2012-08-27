@@ -1,0 +1,46 @@
+{
+	"ts-atpu-test-plugin/atpu-test-plugin.php": {
+		"versions": {
+			"99.99": {
+				"name": "TS Automatic Theme Plugin Update Tester",
+				"slug": "ts-atpu-test-plugin",
+				"version": "99.99",
+				"author": "##auth_short_name##",
+				"author_profile": "##auth_url##",
+				"contibutors": {
+					"##auth_short_name##": "##auth_url##"
+				},
+				"requires": "3.0",
+				"tested": "3.4.1",
+				"compatibility": {
+					"3.4.1": {
+						"99.99": {
+							"0": "100",
+							"1": "1",
+							"2": "1"
+						}
+					}
+				},
+				"rating": "100",
+				"num_ratings": "1",
+				"downloaded": "1",
+				"last_update": "2012-08-20",
+				"added": "2012-08-08",
+				"homepage": "http://github.com/vinorodrigues/wp-automatic-theme-plugin-update",
+				"sections": {
+					"description": "##Description of Plugin##",
+					"installation": "##Install Info##",
+					"screen_shots": "##Screen Shots##",
+					"change_log": "##Change log##",
+					"faq": "##FAQ##",
+					"other_notes": "##Other Notes##"
+				},
+				"download_link": "http://localhost/wp/assets/ts-atpu-test-plugin.zip",
+				"tags": {
+					"code": "code",
+					"php": "php"
+				}
+			}
+		}
+	}
+}
