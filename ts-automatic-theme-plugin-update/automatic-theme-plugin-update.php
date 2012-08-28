@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name: TS Automatic Theme Plugin Update
+ * Plugin Name: TS Automatic Theme & Plugin Update
  * Plugin URI: http://tecsmith.com.au
  * Description: Custom updates plugin
  * Author: Vino Rodrigues
- * Version: 0.1.0-beta
+ * Version: 0.9.2
  * Author URI: http://vinorodrigues.com
  *
  * Based on: http://konstruktors.com/blog/wordpress/2538-automatic-updates-for-plugins-and-themes-hosted-outside-wordpress-extend/
@@ -17,6 +17,9 @@
 
 /* Helpers */
 include_once( 'aide.php' );
+
+/* Options page */
+include_once( 'atpu-opt.php' );
 
 
 /**
@@ -137,7 +140,6 @@ function _ts_atpu_error( $message, $data=null, $file='', $function='', $line='' 
  * Send and process Check requests
  */
 function _ts_atpu_do_check( $transient, $url, $what='plugins' ) {
-
 	if (empty($transient->checked))
 		return $transient;
 
@@ -168,15 +170,20 @@ function _ts_atpu_do_check( $transient, $url, $what='plugins' ) {
 
 	$response = json_decode($response['body']);
 
-	if (isset($response->error)) :
-		if ( !defined('WP_DEBUG') || !WP_DEBUG ) :
+	if (is_null($response)) :
 		_ts_atpu_error(
-			__('Response error'),
+			 __('Response not valid JSON'),
+			null,
+			__FILE__,
+			__FUNCTION__,
+			__LINE__-6 );
+	elseif (isset($response->error)) :
+		_ts_atpu_error(
+			 __('Response error'),
 			$response->error . ' : ' . $response->reason,
 			__FILE__,
 			__FUNCTION__,
 			__LINE__-6 );
-		endif;
 	elseif (isset($response->new)) :
 		$response = object2array( $response->new );
 		// work arround inconsistent WP response
@@ -200,14 +207,12 @@ function ts_atpu_psstup( $transient ) {
 
 	if (!isset($transient->checked)) return $transient;
 
-	if (!isset($_ts_atpu_urls) || !is_array($_ts_atpu_urls))
-		$_ts_atpu_urls = array('http://localhost/api');  // fallback 
-
-	foreach ($_ts_atpu_urls as $url) :
-		$res = _ts_atpu_do_check( $transient, $url );
-		if (!is_wp_error($res))
-			$transient = $res;
-	endforeach;
+	if (isset($_ts_atpu_urls) && is_array($_ts_atpu_urls))
+		foreach ($_ts_atpu_urls as $url) :
+			$res = _ts_atpu_do_check( $transient, $url );
+			if (!is_wp_error($res))
+				$transient = $res;
+		endforeach;
 
 	return $transient;
 }
@@ -222,14 +227,12 @@ function ts_atpu_psstut( $transient ) {
 
 	if (!isset($transient->checked)) return $transient;
 
-	if (!isset($_ts_atpu_urls) || !is_array($_ts_atpu_urls))
-		$_ts_atpu_urls = array('http://localhost/api');  // fallback
-
-	foreach ($_ts_atpu_urls as $url) :
-		$res = _ts_atpu_do_check( $transient, $url, 'themes' );
-		if (!is_wp_error($res))
-			$transient = $res;
-	endforeach;
+	if (isset($_ts_atpu_urls) && is_array($_ts_atpu_urls))
+		foreach ($_ts_atpu_urls as $url) :
+			$res = _ts_atpu_do_check( $transient, $url, 'themes' );
+			if (!is_wp_error($res))
+				$transient = $res;
+		endforeach;
 
 	return $transient;
 }
@@ -254,7 +257,7 @@ function ts_atpu_plugins_api($data, $action, $args) {
 		return _ts_atpu_error(__('cURL not installed'), null, __FILE__, __FUNCTION__, __LINE__-1);
 
 	if (!isset($_ts_atpu_urls) || !is_array($_ts_atpu_urls))
-		$_ts_atpu_urls = array('http://localhost/api');  // fallback
+		return false;
 
 	foreach ($_ts_atpu_urls as $url) :
 		$request = _ts_atpu_prepare_request( $action, array( 'get' => $args->slug ) );
@@ -277,7 +280,14 @@ function ts_atpu_plugins_api($data, $action, $args) {
 
 		$response = json_decode($response['body']);
 
-		if (isset($response->error)) :
+		if (is_null($response)) :
+			_ts_atpu_error(
+				 __('Response not valid JSON'),
+				null,
+				__FILE__,
+				__FUNCTION__,
+				__LINE__-6 );
+		elseif (isset($response->error)) :
 			_ts_atpu_push_error( _ts_atpu_error(
 				__('Response error'),
 				$response->error . ' : ' . $response->reason,

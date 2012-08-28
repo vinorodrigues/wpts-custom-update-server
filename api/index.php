@@ -114,8 +114,7 @@ switch ($action) :
 		if (isset($data['themes']))
 			foreach ( $data['themes'] as $slug => $ver )
 				$checklist[$slug] = $ver;
-		if (isset($data['themes'])) file_put_contents ('c:\temp\~dump.txt', var_export($data, true), FILE_APPEND);
-
+		
 		$response = array();
 
 		foreach ( $checklist as $slug => $v_sent ) :
