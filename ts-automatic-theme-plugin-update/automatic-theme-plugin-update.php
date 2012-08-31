@@ -4,7 +4,7 @@
  * Plugin URI: http://tecsmith.com.au
  * Description: Custom updates plugin
  * Author: Vino Rodrigues
- * Version: 0.9.2
+ * Version: 0.9.3
  * Author URI: http://vinorodrigues.com
  *
  * Based on: http://konstruktors.com/blog/wordpress/2538-automatic-updates-for-plugins-and-themes-hosted-outside-wordpress-extend/
@@ -288,12 +288,14 @@ function ts_atpu_plugins_api($data, $action, $args) {
 				__FUNCTION__,
 				__LINE__-6 );
 		elseif (isset($response->error)) :
-			_ts_atpu_push_error( _ts_atpu_error(
-				__('Response error'),
-				$response->error . ' : ' . $response->reason,
-				__FILE__,
-				__FUNCTION__,
-				__LINE__-6 ) );
+			if ($response->error != 'not found') :  // ignore not-found
+				_ts_atpu_push_error( _ts_atpu_error(
+					__('Response error'),
+					$response->error . ' : ' . $response->reason,
+					__FILE__,
+					__FUNCTION__,
+					__LINE__-7 ) );
+			endif;
 		elseif (isset($response->info)) :
 			$response = object2array($response->info);  // need array's for child elements
 			$response = (object) $response;  // cast base array back to object, leaving child's as array
