@@ -115,20 +115,6 @@ function ts_atpu_admin_options_page() {
 }
 
 
-if ( ! function_exists('is_valid_url') ) :
-/**
- * Validate URL
- *
- * @param string $url
- * @return boolean type
- */
-function is_valid_url( $url ) {
-    $rx = "/^(http:\/\/|https:\/\/)?[a-z0-9_\-]+[a-z0-9_\-\.]+\.[a-z]{2,4}(\/+[a-z0-9_\.\-\/]*)?$/i";
-    return (boolean) preg_match($rx, $url);
-}
-endif;
-
-
 /**
  * Options validation
  */
@@ -136,10 +122,10 @@ function ts_atpu_options_validate( $input ) {
 	$output = array();
 
 	if ( isset( $input['url'] ) ) {
-		if (is_valid_url($input['url']))
+		if (!filter_var($input['url'], FILTER_VALIDATE_URL) === false)
 			$output['url'] = $input['url'];
 		else
-			add_settings_error ('URL', 'url', __('Invalid URL'));
+			add_settings_error('URL', 'url', __('Invalid URL'));
 	}
 	return apply_filters( 'ts_atpu_options_validate', $output, $input );
 }
