@@ -1,10 +1,10 @@
 <?php
 /**
- * Core functionality of TS-Automatic-Theme-Plugin-Update API end-site.
+ * Core functionality of TS-Custom-Updates plugin, API end-site.
  * Based on: http://konstruktors.com/blog/wordpress/2538-automatic-updates-for-plugins-and-themes-hosted-outside-wordpress-extend/
- * 
+ *
  * @author Vino Rodrigues
- * @package TS-Automatic-Theme-Plugin-Update
+ * @package TS-Custom-Update-Server
  * @since TS-Automatic-Theme-Plugin-Update 0.1
  *
  * WARNING: This code is not very forgiving on errors. Error handling is minimal and non-descript.
@@ -114,7 +114,7 @@ switch ($action) :
 		if (isset($data['themes']))
 			foreach ( $data['themes'] as $slug => $ver )
 				$checklist[$slug] = $ver;
-		
+
 		$response = array();
 
 		foreach ( $checklist as $slug => $v_sent ) :
@@ -144,7 +144,7 @@ switch ($action) :
 			$latest_vesion = get_latest_version($slug);
 			$latest_package = get_version_data($slug, $latest_vesion);
 			if (empty($latest_package)) :
-				print json_encode( array( 
+				print json_encode( array(
 					'error' => 'not found',
 					'reason' => 'no package for ' . $slug,
 				) );

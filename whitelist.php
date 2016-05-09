@@ -8,8 +8,7 @@
 $whitelist = array(
     md5('http://localhost/wordpress'),
     md5('http://127.0.0.1/wordpress'),
-    md5('http://192.168.1.8/wordpress'),
-    md5('http://192.168.1.8/wordpress2'),
+    md5('http://10.0.0.80/wordpress'),
 );
 
 /* eof */

@@ -1,13 +1,13 @@
 <?php
 /**
  * @author Vino Rodrigues
- * @package TS-Automatic-Theme-Plugin-Update
+ * @package TS-Custom-Update-Server
  * @since TS-Automatic-Theme-Plugin-Update 0.1
  *
  * WARNING: Make sure your JSON files are valid, or else the objects will fail to load.
  */
 
-define( 'ASSET_FOLDER', 'assets' );
+if (!defined('ASSET_FOLDER')) define( 'ASSET_FOLDER', 'assets' );
 
 function object2array($object) {
 	if (is_object($object)) {
